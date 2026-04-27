@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Imperium: Age of Empires</title>
+  <meta name="description" content="A premium grand strategy empire-building game set in the ancient world.">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ===================== FACTION SELECTION SCREEN ===================== -->
+  <div id="faction-screen" class="screen active">
+    <div class="faction-bg-overlay"></div>
+    <div class="faction-content">
+      <div class="title-banner">
+        <div class="title-ornament">✦</div>
+        <h1 class="game-title">IMPERIUM</h1>
+        <div class="title-ornament">✦</div>
+      </div>
+      <p class="game-subtitle">Age of Empires</p>
+      <p class="game-tagline">250 BC — The ancient world awaits your conquest</p>
+
+      <div class="faction-grid">
+
+        <div class="faction-card" id="card-romans" data-faction="romans">
+          <div class="faction-emblem">⚔️</div>
+          <h2 class="faction-name">Roman Empire</h2>
+          <p class="faction-bonus">🪙 +20% Gold Income</p>
+          <p class="faction-desc">Masters of discipline and law. The Roman legions are unmatched in close combat. Italia, Sicilia, and the Western Mediterranean await your conquest.</p>
+          <div class="faction-stats">
+            <div class="stat-bar-wrap"><span>Military</span><div class="stat-bar"><div class="stat-fill" style="width:85%; background:#8b1a1a;"></div></div></div>
+            <div class="stat-bar-wrap"><span>Economy</span><div class="stat-bar"><div class="stat-fill" style="width:75%;"></div></div></div>
+            <div class="stat-bar-wrap"><span>Culture</span><div class="stat-bar"><div class="stat-fill" style="width:70%;"></div></div></div>
+          </div>
+          <button class="choose-btn">Choose Rome</button>
+        </div>
+
+        <div class="faction-card featured" id="card-persians" data-faction="persians">
+          <div class="featured-badge">✦ RECOMMENDED ✦</div>
+          <div class="faction-emblem">🌙</div>
+          <h2 class="faction-name">Persian Empire</h2>
+          <p class="faction-bonus">🐎 +20% Army Speed</p>
+          <p class="faction-desc">A vast empire of immense wealth and diversity. Persian Immortals are legendary warriors. Anatolia, Mesopotamia and Persia are your heartland.</p>
+          <div class="faction-stats">
+            <div class="stat-bar-wrap"><span>Military</span><div class="stat-bar"><div class="stat-fill" style="width:80%; background:#d4a017;"></div></div></div>
+            <div class="stat-bar-wrap"><span>Economy</span><div class="stat-bar"><div class="stat-fill" style="width:90%;"></div></div></div>
+            <div class="stat-bar-wrap"><span>Culture</span><div class="stat-bar"><div class="stat-fill" style="width:85%;"></div></div></div>
+          </div>
+          <button class="choose-btn">Choose Persia</button>
+        </div>
+
+        <div class="faction-card" id="card-egyptians" data-faction="egyptians">
+          <div class="faction-emblem">𓂀</div>
+          <h2 class="faction-name">Egyptian Kingdom</h2>
+          <p class="faction-bonus">🌾 +30% Food Generation</p>
+          <p class="faction-desc">Children of the sacred Nile. Egypt commands unrivaled food production and a massive population. North Africa and the Nile Delta are under your pharaoh's eye.</p>
+          <div class="faction-stats">
+            <div class="stat-bar-wrap"><span>Military</span><div class="stat-bar"><div class="stat-fill" style="width:60%; background:#2e8b57;"></div></div></div>
+            <div class="stat-bar-wrap"><span>Economy</span><div class="stat-bar"><div class="stat-fill" style="width:80%;"></div></div></div>
+            <div class="stat-bar-wrap"><span>Culture</span><div class="stat-bar"><div class="stat-fill" style="width:95%;"></div></div></div>
+          </div>
+          <button class="choose-btn">Choose Egypt</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== MAIN GAME SCREEN ===================== -->
+  <div id="game-screen" class="screen">
+
+    <!-- TOP RESOURCE BAR -->
+    <div id="top-bar">
+      <div class="empire-name-display" id="empire-name-display">Roman Empire</div>
+      <div class="resource-group">
+        <div class="resource-item" title="Gold per turn">
+          <span class="res-icon">🪙</span>
+          <span class="res-val" id="res-gold">0</span>
+          <span class="res-inc" id="inc-gold">+0</span>
+        </div>
+        <div class="resource-item" title="Food per turn">
+          <span class="res-icon">🌾</span>
+          <span class="res-val" id="res-food">0</span>
+          <span class="res-inc" id="inc-food">+0</span>
+        </div>
+        <div class="resource-item" title="Wood">
+          <span class="res-icon">🪵</span>
+          <span class="res-val" id="res-wood">0</span>
+        </div>
+        <div class="resource-item" title="Stone">
+          <span class="res-icon">🪨</span>
+          <span class="res-val" id="res-stone">0</span>
+        </div>
+        <div class="resource-item" title="Iron">
+          <span class="res-icon">⛏️</span>
+          <span class="res-val" id="res-iron">0</span>
+        </div>
+        <div class="resource-item" title="Population">
+          <span class="res-icon">👥</span>
+          <span class="res-val" id="res-pop">0</span>
+        </div>
+      </div>
+      <div class="top-bar-right">
+        <div class="date-display">
+          <span id="current-year">250 BC</span>
+          <span class="turn-badge" id="current-turn">Turn 1</span>
+        </div>
+        <button id="end-turn-btn" class="end-turn-btn">
+          <span>⏭</span> End Turn
+        </button>
+      </div>
+    </div>
+
+    <!-- LEAFLET MAP -->
+    <div id="map-container"></div>
+
+    <!-- LEFT PANEL: Territory Info -->
+    <div id="territory-panel" class="side-panel hidden" aria-label="Territory information">
+      <div class="panel-header">
+        <h2 id="terr-name">Select a Region</h2>
+        <div class="terr-faction-badge" id="terr-faction-badge"></div>
+      </div>
+      <div class="terr-owner-line">Controlled by: <span id="terr-owner-name" class="owner-name">–</span></div>
+      <div class="terr-stats-row">
+        <div class="stat-chip">🏔️ <span id="terr-type">–</span></div>
+        <div class="stat-chip">👥 <span id="terr-pop">0</span></div>
+      </div>
+
+      <div class="panel-section">
+        <div class="section-title">Buildings</div>
+        <div id="terr-buildings" class="building-list"></div>
+        <button id="btn-build" class="action-btn hidden"><span>🏗️</span> Construct Building</button>
+      </div>
+
+      <div class="panel-section">
+        <div class="section-title">Garrison</div>
+        <div id="terr-garrison" class="garrison-list"></div>
+        <div class="military-btns">
+          <button id="btn-recruit" class="action-btn hidden"><span>⚔️</span> Recruit Units</button>
+          <button id="btn-move-army" class="action-btn action-btn--attack hidden"><span>🏴‍☠️</span> Move / Attack</button>
+        </div>
+      </div>
+
+      <div id="diplomacy-section" class="panel-section hidden">
+        <div class="section-title">Diplomacy</div>
+        <div id="diplomacy-status"></div>
+        <div class="diplomacy-btns">
+          <button id="btn-propose-alliance" class="action-btn">🤝 Propose Alliance</button>
+          <button id="btn-declare-war" class="action-btn action-btn--attack">⚔️ Declare War</button>
+          <button id="btn-offer-trade" class="action-btn">📜 Offer Trade</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL: Empire summary -->
+    <div id="empire-panel" class="side-panel empire-side-panel">
+      <div class="panel-header"><h3>Your Empire</h3></div>
+      <div id="empire-provinces">0 Provinces</div>
+      <div id="empire-power">Power: 0</div>
+      <button id="btn-submit-score" class="action-btn" style="margin-top: 10px;">👑 Submit Empire Score</button>
+      <div class="divider"></div>
+      <div class="panel-section">
+        <div class="section-title">Relations</div>
+        <div id="relations-list"></div>
+      </div>
+      <div class="divider"></div>
+      <div class="panel-section">
+        <div class="section-title">Event Log</div>
+        <div id="event-log"></div>
+      </div>
+    </div>
+
+    <!-- ADVISOR PANEL -->
+    <div id="advisor-panel">
+      <div class="advisor-portrait">
+        <div class="advisor-avatar">🏛️</div>
+      </div>
+      <div class="advisor-dialog">
+        <div class="advisor-name">Royal Advisor — Marcus Aurelius</div>
+        <p id="advisor-text"></p>
+        <button id="advisor-next-btn" class="advisor-next hidden">Continue →</button>
+      </div>
+    </div>
+
+    <!-- NEWS TICKER -->
+    <div id="news-ticker">
+      <span class="ticker-label">📜 HERALD</span>
+      <div id="news-scroll-wrap">
+        <div id="news-content">Welcome to Imperium. Your reign begins...</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MODAL (Build / Recruit / Battle) -->
+  <div id="game-modal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal-panel">
+      <div class="modal-header">
+        <h2 id="modal-title">Select Action</h2>
+        <button id="modal-close" class="modal-close-btn" aria-label="Close">✕</button>
+      </div>
+      <div id="modal-content" class="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- BATTLE REPORT MODAL -->
+  <div id="battle-modal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal-panel battle-report">
+      <div class="battle-header">
+        <h2 id="battle-title">⚔️ Battle Report</h2>
+      </div>
+      <div id="battle-content" class="battle-body"></div>
+      <button id="battle-close" class="choose-btn" style="margin-top:20px">Acknowledge</button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="js/data.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/map.js"></script>
+</body>
+</html>
